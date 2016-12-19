@@ -16,9 +16,13 @@ Exports functions that handle whether or not terminal input is handled in a way
 that should be portable across different platforms and consoles.
 -}
 module System.IO.Echo (
+      -- * Public interface
       withoutInputEcho, bracketInputEcho
     , getInputEchoState, setInputEchoState
-    , echoOff, echoOn
+    , EchoState, echoOff, echoOn
+
+      -- * Alternative interface
+    , getInputEcho, setInputEcho
     ) where
 
 import System.IO.Echo.Internal

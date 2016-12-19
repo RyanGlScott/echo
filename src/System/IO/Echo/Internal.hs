@@ -19,7 +19,7 @@ Portability: Portable
 Exports functions that handle whether or not terminal input is handled in a way
 that should be portable across different platforms and consoles.
 
-Unlike "System.IO.Echo", this module export internal functionality which, if
+Unlike "System.IO.Echo", this module exports internal functionality which, if
 used improperly, can lead to runtime errors. Make sure to read the
 documentation beforehand!
 -}
@@ -57,7 +57,11 @@ import System.IO.Echo.MinTTY (isMinTTYHandle)
 import System.IO.Unsafe (unsafePerformIO)
 #endif
 
--- RGS TODO
+-- | Return whether the terminal's echoing is on ('True') or off ('False').
+--
+-- Note that while this works on MinTTY, it is not as efficient as
+-- 'getInputEchoState', as it involves a somewhat expensive substring
+-- computation.
 getInputEcho :: IO Bool
 getInputEcho = if minTTY
                   then do settings <- sttyRaw "-a"
@@ -68,40 +72,61 @@ getInputEcho = if minTTY
                           return $ not ("-echo " `isInfixOf` settings)
                   else hGetEcho stdin
 
--- RGS TODO
+-- | Return the terminal's current input 'EchoState'.
 getInputEchoState :: IO EchoState
 getInputEchoState = if minTTY
                        then fmap MinTTY getInputEchoSTTY
                        else fmap DefaultTTY $ hGetEcho stdin
 
--- RGS TODO
+-- | Return all of @stty@'s current settings in a non-human-readable format.
+--
+-- This function is not very useful on its own. Its greater purpose is to
+-- provide a compact 'STTYSettings' that can be fed back into
+-- 'setInputEchoState'.
 getInputEchoSTTY :: IO STTYSettings
 getInputEchoSTTY = sttyRaw "-g"
 
--- RGS TODO
+-- | Set the terminal's echoing on ('True') or off ('False').
 setInputEcho :: Bool -> IO ()
 setInputEcho echo = if minTTY
                        then setInputEchoSTTY $ ['-' | not echo] ++ "echo"
                        else hSetEcho stdin echo
 
--- RGS TODO
+-- | Set the terminal's input 'EchoState'.
 setInputEchoState :: EchoState -> IO ()
 setInputEchoState (MinTTY settings) = setInputEchoSTTY settings
 setInputEchoState (DefaultTTY echo) = hSetEcho stdin echo
 
--- RGS TODO
+-- | Create an @stty@ process and wait for it to complete. This is useful for
+-- changing @stty@'s settings, after which @stty@ does not output anything.
+--
+-- @
+-- setInputEchoSTTY = 'void' . 'sttyRaw'
+-- @
 setInputEchoSTTY :: STTYSettings -> IO ()
 setInputEchoSTTY = void . sttyRaw
 
--- RGS TODO
+-- | Save the terminal's current input 'EchoState', perform a computation,
+-- restore the saved 'EchoState', and then return the result of the
+-- computation.
+--
+-- @
+-- bracketInputEcho action = 'bracket' 'getInputEcho' 'setInputEcho' (const action)
+-- @
 bracketInputEcho :: IO a -> IO a
 bracketInputEcho action = bracket getInputEcho setInputEcho (const action)
 
--- RGS TODO
+-- | Perform a computation with the terminal's input echoing disabled. Before
+-- running the computation, the terminal's input 'EchoState' is saved, and the
+-- saved 'EchoState' is restored after the computation finishes.
+--
+-- @
+-- withoutInputEcho action = 'bracketInputEcho' ('setInputEchoState' 'echoOff' >> action)
+-- @
 withoutInputEcho :: IO a -> IO a
 withoutInputEcho action = bracketInputEcho (setInputEchoState echoOff >> action)
 
--- RGS TODO
+-- | Create an @stty@ process, wait for it to complete, and return its output.
 sttyRaw :: String -> IO STTYSettings
 sttyRaw arg = do
   let stty = (shell $ "stty " ++ arg) {
@@ -114,21 +139,39 @@ sttyRaw arg = do
     e@ExitFailure{} -> throw e
     ExitSuccess     -> maybe (return "") hGetContents mbStdout
 
--- RGS TODO
-data EchoState = MinTTY STTYSettings | DefaultTTY Bool
+-- | A representation of the terminal input's current echoing state. Example
+-- values include 'echoOff' and 'echoOn'.
+data EchoState
+  = MinTTY STTYSettings
+    -- ^ The argument to (or value returned from) an invocation of the @stty@
+    -- command-line utility. Most POSIX-like shells have @stty@, including
+    -- MinTTY on Windows. Since neither 'hGetEcho' nor 'hSetEcho' work on
+    -- MinTTY, when 'getInputEchoState' runs on MinTTY, it returns a value
+    -- built with this constructor.
+    --
+    -- However, native Windows consoles like @cmd.exe@ or PowerShell do not
+    -- have @stty@, so if you construct an 'EchoState' with this constructor
+    -- manually, take care not to use it with a native Windows console.
+  | DefaultTTY Bool
+    -- ^ A simple on ('True') or off ('False') toggle. This is returned by
+    -- 'hGetEcho' and given as an argument to 'hSetEcho', which work on most
+    -- consoles, with the notable exception of MinTTY on Windows. If you
+    -- construct an 'EchoState' with this constructor manually, take care not
+    -- to use it with MinTTY.
   deriving (Eq, Ord, Show)
 
--- RGS TODO
+-- | Indicates that the terminal's input echoing is (or should be) off.
 echoOff :: EchoState
 echoOff = if minTTY then MinTTY "-echo" else DefaultTTY False
 
--- RGS TODO
+-- | Indicates that the terminal's input echoing is (or should be) on.
 echoOn :: EchoState
 echoOn = if minTTY then MinTTY "echo" else DefaultTTY True
 
--- RGS TODO
+-- | Settings used to configure the @stty@ command-line utility.
 type STTYSettings = String
 
+-- | Is the current process attached to a MinTTY console (e.g., Cygwin or MSYS)?
 minTTY :: Bool
 #if defined(WINDOWS)
 minTTY = unsafePerformIO $ do
