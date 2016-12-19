@@ -4,7 +4,7 @@
 # if defined(WINDOWS)
 {-# LANGUAGE Trustworthy #-}
 # else
-#  if __GLASGOW_HASKELL__ >= 709
+#  if __GLASGOW_HASKELL__ >= 704
 {-# LANGUAGE Safe #-}
 #  else
 {-# LANGUAGE Trustworthy #-}
