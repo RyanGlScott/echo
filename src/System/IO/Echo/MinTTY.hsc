@@ -1,6 +1,7 @@
 {-
-This functionality will be available in a future release of Win32. Until then,
-we backport this module here for backwards compatibility.
+This is a direct copy of System.Win32.MinTTY from the Win32 library. We need
+this for backwards compatibility with older versions of Win32 which do not ship
+with this module.
 -}
 
 {-# LANGUAGE CPP #-}
@@ -13,7 +14,7 @@ we backport this module here for backwards compatibility.
 #endif
 -----------------------------------------------------------------------------
 -- |
--- Module      :  System.IO.Echo.MinTTY
+-- Module      :  System.Win32.MinTTY
 -- Copyright   :  (c) University of Glasgow 2006
 -- License     :  BSD-style (see the file LICENSE)
 --
@@ -49,6 +50,7 @@ import System.FilePath (takeFileName)
 -- The headers that are shipped with GHC's copy of MinGW-w64 assume Windows XP.
 -- Since we need some structs that are only available with Vista or later,
 -- we must manually set WINVER/_WIN32_WINNT accordingly.
+#undef WINVER
 #define WINVER 0x0600
 #undef _WIN32_WINNT
 #define _WIN32_WINNT 0x0600
@@ -62,9 +64,9 @@ isMinTTY :: IO Bool
 isMinTTY = do
     h <- getStdHandle sTD_ERROR_HANDLE
            `catch` \(_ :: IOError) ->
-             pure nullHANDLE
+             return nullHANDLE
     if h == nullHANDLE
-       then pure False
+       then return False
        else isMinTTYHandle h
 
 -- | Returns 'True' is the given handle is attached to a MinTTY console
@@ -73,7 +75,7 @@ isMinTTYHandle :: HANDLE -> IO Bool
 isMinTTYHandle h = do
     fileType <- getFileType h
     if fileType /= fILE_TYPE_PIPE
-      then pure False
+      then return False
       else isMinTTYVista h `catch` \(_ :: IOError) -> isMinTTYCompat h
       -- GetFileNameByHandleEx is only available on Vista and later (hence
       -- the name isMinTTYVista). If we're on an older version of Windows,
@@ -84,16 +86,16 @@ isMinTTYHandle h = do
 isMinTTYVista :: HANDLE -> IO Bool
 isMinTTYVista h = do
     fn <- getFileNameByHandle h
-    pure $ cygwinMSYSCheck fn
+    return $ cygwinMSYSCheck fn
   `catch` \(_ :: IOError) ->
-    pure False
+    return False
 
 isMinTTYCompat :: HANDLE -> IO Bool
 isMinTTYCompat h = do
     fn <- ntQueryObjectNameInformation h
-    pure $ cygwinMSYSCheck fn
+    return $ cygwinMSYSCheck fn
   `catch` \(_ :: IOError) ->
-    pure False
+    return False
 
 cygwinMSYSCheck :: String -> Bool
 cygwinMSYSCheck fn = ("cygwin-" `isPrefixOf` fn' || "msys-" `isPrefixOf` fn') &&

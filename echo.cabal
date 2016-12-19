@@ -21,6 +21,8 @@ source-repository head
 
 library
   exposed-modules:     System.IO.Echo
+  other-modules:       System.IO.Echo.Internal
+
   build-depends:       base >= 4.3 && < 5
   if os(windows)
     build-depends:     filepath, process, Win32
