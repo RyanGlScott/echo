@@ -34,9 +34,9 @@ library
   exposed-modules:     System.IO.Echo
                        System.IO.Echo.Internal
 
-  build-depends:       base >= 4.3 && < 5
+  build-depends:       base >= 4.3 && < 5, process
   if os(windows)
-    build-depends:     filepath, process, Win32
+    build-depends:     filepath, Win32
     build-tools:       hsc2hs
     include-dirs:      include
     includes:          windows_cconv.h
