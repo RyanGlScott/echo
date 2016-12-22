@@ -43,7 +43,7 @@ library
     build-depends:     filepath, Win32
     build-tools:       hsc2hs
     include-dirs:      include
-    includes:          windows_cconv.h
+    includes:          windows_cconv.h, winternl_compat.h
     cpp-options:       "-DWINDOWS"
     other-modules:     System.IO.Echo.MinTTY
     extra-libraries:   ntdll
