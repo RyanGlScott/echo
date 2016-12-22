@@ -1,3 +1,3 @@
-## 0.1 [YYYY-mm-dd]
+## 0.1 [2016-12-22]
 
 * First version.
