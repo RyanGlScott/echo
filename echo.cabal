@@ -23,7 +23,7 @@ stability:           Provisional
 copyright:           (C) 2016 Ryan Scott
 category:            System
 build-type:          Simple
-extra-source-files:  CHANGELOG.md, README.md
+extra-source-files:  CHANGELOG.md, README.md, include/*.h
 cabal-version:       >=1.10
 
 source-repository head
