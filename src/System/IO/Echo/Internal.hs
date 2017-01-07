@@ -57,7 +57,11 @@ import System.Process (StdStream(..), createProcess, shell,
 #if defined(WINDOWS)
 import Graphics.Win32.Misc (getStdHandle, sTD_INPUT_HANDLE)
 
+# if MIN_VERSION_Win32(2,5,0)
+import System.Win32.MinTTY (isMinTTYHandle)
+# else
 import System.IO.Echo.MinTTY (isMinTTYHandle)
+# endif
 import System.IO.Unsafe (unsafePerformIO)
 #endif
 
