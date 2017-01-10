@@ -119,10 +119,10 @@ setInputEchoSTTY = void . sttyRaw
 -- computation.
 --
 -- @
--- bracketInputEcho action = 'bracket' 'getInputEcho' 'setInputEcho' (const action)
+-- bracketInputEcho action = 'bracket' 'getInputEchoState' 'setInputEchoState' (const action)
 -- @
 bracketInputEcho :: IO a -> IO a
-bracketInputEcho action = bracket getInputEcho setInputEcho (const action)
+bracketInputEcho action = bracket getInputEchoState setInputEchoState (const action)
 
 -- | Perform a computation with the terminal's input echoing disabled. Before
 -- running the computation, the terminal's input 'EchoState' is saved, and the
