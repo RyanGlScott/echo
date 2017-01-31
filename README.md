@@ -8,7 +8,7 @@
 
 [Hackage: echo]:
   http://hackage.haskell.org/package/echo
-  "text-show package on Hackage"
+  "echo package on Hackage"
 [Haskell.org]:
   http://www.haskell.org
   "The Haskell Programming Language"
