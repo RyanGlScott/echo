@@ -107,6 +107,8 @@ install:
     fi
   - grep -Ev -- '^\s*--' ${HOME}/.cabal/config | grep -Ev '^\s*$'
   - "printf 'packages: \".\"\\n' > cabal.project"
+  - "echo 'package echo' >> cabal.project"
+  - "echo '  flags: +example' >> cabal.project"
   - echo 'package echo' >> cabal.project
   - "echo '  ghc-options: -Werror' >> cabal.project"
   - touch cabal.project.local
@@ -130,6 +132,8 @@ script:
   - cd ${DISTDIR} || false
   - find . -maxdepth 1 -name '*.tar.gz' -exec tar -xvf '{}' \;
   - "printf 'packages: echo-*/*.cabal\\n' > cabal.project"
+  - "echo 'package echo' >> cabal.project"
+  - "echo '  flags: +example' >> cabal.project"
   - echo 'package echo' >> cabal.project
   - "echo '  ghc-options: -Werror' >> cabal.project"
   - touch cabal.project.local
