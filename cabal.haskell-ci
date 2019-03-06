@@ -1,0 +1,5 @@
+ghc-head:               True
+no-tests-no-benchmarks: False
+unconstrained:          False
+copy-fields:            all
+local-ghc-options:      -Werror
