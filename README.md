@@ -3,7 +3,7 @@
 [![Hackage Dependencies](https://img.shields.io/hackage-deps/v/echo.svg)](http://packdeps.haskellers.com/reverse/echo)
 [![Haskell Programming Language](https://img.shields.io/badge/language-Haskell-blue.svg)][Haskell.org]
 [![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)][tl;dr Legal: BSD3]
-[![Build](https://img.shields.io/travis/RyanGlScott/echo.svg)](https://travis-ci.org/RyanGlScott/echo)
+[![Linux build](https://github.com/RyanGlScott/echo/workflows/Haskell-CI/badge.svg)](https://github.com/RyanGlScott/echo/actions?query=workflow%3AHaskell-CI)
 [![Windows build](https://ci.appveyor.com/api/projects/status/a0dh9v7j995tjj2u?svg=true)](https://ci.appveyor.com/project/RyanGlScott/echo)
 
 [Hackage: echo]:
