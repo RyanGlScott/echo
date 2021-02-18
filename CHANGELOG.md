@@ -1,5 +1,5 @@
 ### next [????.??.??]
-* Don't enable `Safe` on GHC 7.2.
+* Use `Trustworthy`, not `Safe`, on GHC 7.2 to work around an old GHC bug.
 
 ### 0.1.3 [2017.01.30]
 * The MinTTY-detection portion of this library has been split off into `mintty`, on which `echo` now depends.
