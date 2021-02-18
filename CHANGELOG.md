@@ -1,4 +1,4 @@
-### next [????.??.??]
+### 0.1.4 [2021.02.17]
 * Use `Trustworthy`, not `Safe`, on GHC 7.2 to work around an old GHC bug.
 
 ### 0.1.3 [2017.01.30]
