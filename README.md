@@ -1,6 +1,5 @@
 # `echo`
 [![Hackage](https://img.shields.io/hackage/v/echo.svg)][Hackage: echo]
-[![Hackage Dependencies](https://img.shields.io/hackage-deps/v/echo.svg)](http://packdeps.haskellers.com/reverse/echo)
 [![Haskell Programming Language](https://img.shields.io/badge/language-Haskell-blue.svg)][Haskell.org]
 [![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)][tl;dr Legal: BSD3]
 [![Linux build](https://github.com/RyanGlScott/echo/workflows/Haskell-CI/badge.svg)](https://github.com/RyanGlScott/echo/actions?query=workflow%3AHaskell-CI)
